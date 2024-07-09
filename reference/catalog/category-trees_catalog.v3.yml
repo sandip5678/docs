@@ -326,10 +326,13 @@ paths:
       description: |
         Upserts category trees. 
 
-        This single endpoint updates and creates category trees. If a tree object contains an ID, it is processed as an update operation using that ID. If you do not provide an ID, a new tree is created. The category tree `name` field is required to create trees, but is not required on the update.
+        This single endpoint updates and creates category trees. If a tree object contains an ID, it is processed as an update operation using that ID. If you do not provide an ID, a new tree is created.
         
         **Usage Notes**
-        * `channel_id` is required to create a category tree. You can assign one `channel_id` to one category tree.
+        * The category tree `name` field is required to create trees.
+        * The `channels` array containing a `channel_id` is required to create a category tree.
+        * You can assign one `channel_id` to one category tree.
+        * The channel array cannot be updated once a category tree is created.
       parameters:
         - $ref: '#/components/parameters/ContentType'
       operationId: upsertCategoryTrees
@@ -339,6 +342,16 @@ paths:
           application/json:
             schema:
               '$ref': '#/components/schemas/CategoryTreeListRequest'
+            examples:
+              Create Category Tree:
+                value:
+                  - name: New Category Tree
+                    channels:
+                      - 1
+              Update Category Tree:
+                value:
+                  - id: 1
+                    name: Updated Category Tree
       responses:
         '200':
           description: Created a category tree.
@@ -348,10 +361,10 @@ paths:
                 $ref: '#/components/schemas/CategoryTree'
               example:
                 data:
-                  - id: 0
-                    name: string
+                  - id: 1
+                    name: Category Tree Name
                     channels:
-                    - 0
+                    - 1
                 meta: {}
         '401':
           $ref: '#/components/responses/UnauthorizedError'
@@ -793,10 +806,10 @@ components:
       items:
         $ref: '#/components/schemas/Tree'
       example:
-        - id: 0
-          name: string
+        - id: 1
+          name: Category Tree Name
           channels:
-            - 0
+            - 1
     CategoryNode:
       type: object
       properties:
